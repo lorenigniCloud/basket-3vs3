@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+What I mean is that the component must always be instiantiated with the const keyword and not the function; when expressively needed, remember to inject props implementing an interface and then decustring in the body of the component.
+
+Example:
+
+interface DashboardPageProps{
+    prop1: string
+    prop2: string
+}
+
+const DashboardPage = (props: DashboardPageProps)  => {
+    const {prop1, prop2} = props;
+    return (<> TSX </>);
+};
+
+
+export default DashboardPage;

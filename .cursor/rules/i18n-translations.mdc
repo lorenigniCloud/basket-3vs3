@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Whenever you insert hardly coded string for user UI interaction, remeber to translate them and insert them into the it.json and en-json file, and in the end replacing the hardly coded string with the it.json and en-json proprerties
+
