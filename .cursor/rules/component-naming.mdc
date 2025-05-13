@@ -4,7 +4,7 @@ globs:
 alwaysApply: true
 ---
 
-What I mean is that the component must always be instiantiated with the const keyword and not the function; when expressively needed, remember to inject props implementing an interface and then decustring in the body of the component.
+What I mean is that the component must always be instiantiated with the const keyword and not the function; when expressively needed, remember to inject props implementing an interface, decustring in the body of the component and using export default at the end of hte file.
 
 Example:
 

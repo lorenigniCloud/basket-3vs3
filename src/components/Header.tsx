@@ -4,6 +4,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import MuiLink from "@mui/material/Link";
 import NextLink from "next/link";
 import React from "react";
+import ThemeToggle from "./ThemeToggle";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
@@ -31,6 +32,7 @@ const Header = (props: HeaderProps) => {
               {title}
             </NextLink>
           </Typography>
+          <ThemeToggle />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <NextLink
               href="/"

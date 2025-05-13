@@ -6,6 +6,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import type { Metadata } from "next";
+import { ThemeProvider } from "../theme/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,9 +34,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppRouterCacheProvider>
-          <Header title="My Next.js App" />
-          {children}
-          <Footer companyName="My Company" year={new Date().getFullYear()} />
+          <ThemeProvider>
+            <Header title="My Next.js App" />
+            {children}
+            <Footer companyName="My Company" year={new Date().getFullYear()} />
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
