@@ -1,7 +1,3 @@
-import { Alert, Box, Button } from "@mui/material";
-
-import ErrorBoundary from "@/components/ErrorBoundary";
-import Link from "next/link";
 import { Metadata } from "next";
 import TournamentRegistration from "../../components/TournamentRegistration";
 
@@ -16,25 +12,7 @@ export default function TournamentPage() {
       <h1 className="text-4xl font-bold mb-8 text-center">
         Tournament Registration
       </h1>
-      <ErrorBoundary
-        fallback={
-          <Box className="p-8">
-            <Alert
-              severity="error"
-              className="mb-4"
-              action={
-                <Button color="inherit" component={Link} href="/">
-                  Return to Home
-                </Button>
-              }
-            >
-              Something went wrong with the registration form.
-            </Alert>
-          </Box>
-        }
-      >
-        <TournamentRegistration />
-      </ErrorBoundary>
+      <TournamentRegistration />
     </div>
   );
 }
