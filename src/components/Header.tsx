@@ -8,10 +8,6 @@ import ThemeToggle from "./ThemeToggle";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-// Keep Next.js Link for main navigation
-
-// Import Material UI Link for breadcrumbs
-
 interface HeaderProps {
   title: string;
   breadcrumbs?: { label: string; href?: string }[];
@@ -66,6 +62,17 @@ const Header = (props: HeaderProps) => {
               }}
             >
               Contact
+            </NextLink>
+            <NextLink
+              href="/tournament"
+              passHref
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                marginLeft: "16px",
+              }}
+            >
+              Tournament
             </NextLink>
           </Box>
         </Toolbar>

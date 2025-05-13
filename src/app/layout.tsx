@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../style/globals.css";
 
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -35,7 +35,7 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <ThemeProvider>
-            <Header title="My Next.js App" />
+            <Header title="Basket 3vs3" />
             {children}
             <Footer companyName="My Company" year={new Date().getFullYear()} />
           </ThemeProvider>
