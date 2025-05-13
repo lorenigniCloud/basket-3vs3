@@ -1,5 +1,7 @@
 "use client";
 
+import "../i18n/config";
+
 import {
   Alert,
   Box,
@@ -14,11 +16,28 @@ import type {
   RegistrationFormData,
   RegistrationState,
 } from "@/actions/tournament";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import TournamentPlayersSection from "./TournamentPlayersSection";
 import { registerTeam } from "@/actions/tournament";
 import { useActionState } from "react";
+import { useTranslation } from "react-i18next";
+import { z } from "zod";
+
+const playerSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Valid email is required" }),
+  phoneNumber: z.string().min(5, { message: "Valid phone number is required" }),
+  position: z.string().min(1, { message: "Position is required" }),
+});
+
+const formSchema = z.object({
+  teamName: z.string().min(1, { message: "Team name is required" }),
+  players: z
+    .array(playerSchema)
+    .min(3, { message: "At least 3 players are required" })
+    .max(5, { message: "Maximum of 5 players allowed" }),
+});
 
 const POSITIONS = ["Guard", "Forward", "Center"];
 
@@ -35,6 +54,8 @@ const TournamentRegistration = () => {
     { name: "", email: "", phoneNumber: "", position: "" },
   ]);
   const [teamName, setTeamName] = useState("");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const { t } = useTranslation();
 
   const [state, formAction, isPending] = useActionState(
     async (prevState: RegistrationState, formData: FormData) => {
@@ -42,7 +63,34 @@ const TournamentRegistration = () => {
         teamName: formData.get("teamName") as string,
         players: players.filter((player) => player.name && player.email),
       };
-      return registerTeam(data);
+
+      // Validate form data with Zod
+      try {
+        formSchema.parse(data);
+        setFormErrors({});
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          const errorMap: Record<string, string> = {};
+          error.errors.forEach((err) => {
+            const path = err.path.join(".");
+            errorMap[path] = err.message;
+          });
+          setFormErrors(errorMap);
+          return {
+            message: "Please fix the errors in the form",
+            status: "error" as const,
+          };
+        }
+      }
+
+      try {
+        return await registerTeam(data);
+      } catch (error) {
+        return {
+          message: "Failed to register team. Please try again later.",
+          status: "error" as const,
+        };
+      }
     },
     initialState,
   );
@@ -70,9 +118,27 @@ const TournamentRegistration = () => {
       const newPlayers = [...players];
       newPlayers[index] = { ...newPlayers[index], [field]: value };
       setPlayers(newPlayers);
+
+      // Clear field error when user is typing
+      if (formErrors[`players.${index}.${field}`]) {
+        const newErrors = { ...formErrors };
+        delete newErrors[`players.${index}.${field}`];
+        setFormErrors(newErrors);
+      }
     },
-    [players],
+    [players, formErrors],
   );
+
+  const getFieldError = (field: string): string | undefined => {
+    return formErrors[field];
+  };
+
+  const getPlayerFieldError = (
+    index: number,
+    field: keyof Player,
+  ): string | undefined => {
+    return formErrors[`players.${index}.${field}`];
+  };
 
   return (
     <Paper
@@ -98,11 +164,20 @@ const TournamentRegistration = () => {
           <TextField
             fullWidth
             name="teamName"
-            label="Team Name"
+            label={t("Team Name")}
             value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
+            onChange={(e) => {
+              setTeamName(e.target.value);
+              if (formErrors.teamName) {
+                const newErrors = { ...formErrors };
+                delete newErrors.teamName;
+                setFormErrors(newErrors);
+              }
+            }}
             required
             variant="outlined"
+            error={!!formErrors.teamName}
+            helperText={formErrors.teamName}
             sx={{
               "& .MuiOutlinedInput-root": {
                 borderRadius: "12px",
@@ -113,11 +188,18 @@ const TournamentRegistration = () => {
             }}
           />
 
+          {formErrors.players && (
+            <Alert severity="error" className="mt-2">
+              {formErrors.players}
+            </Alert>
+          )}
+
           <TournamentPlayersSection
             players={players}
             handlePlayerChange={handlePlayerChange}
             handleRemovePlayer={handleRemovePlayer}
             handleAddPlayer={handleAddPlayer}
+            getPlayerFieldError={getPlayerFieldError}
           />
 
           {state.status !== "idle" && (
@@ -150,7 +232,7 @@ const TournamentRegistration = () => {
               transition: "all 0.3s ease",
             }}
           >
-            {isPending ? <CircularProgress /> : "Register Team"}
+            {isPending ? <CircularProgress /> : t("Register Team")}
           </Button>
         </Box>
       </form>

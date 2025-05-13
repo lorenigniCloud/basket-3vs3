@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 export interface Player {
   name: string;
   email: string;
@@ -21,18 +23,14 @@ export async function registerTeam(
   data: RegistrationFormData,
 ): Promise<RegistrationState> {
   try {
-    // Validate team size
-    if (data.players.length < 3 || data.players.length > 5) {
-      return {
-        message: "Team must have between 3 and 5 players",
-        status: "error",
-      };
-    }
-
     // Here you would typically save to your database
     // For now, we'll just simulate a successful registration
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
+    // Redirect to the home page after successful registration
+    redirect("/");
+
+    // This won't be reached due to the redirect, but needed for TypeScript
     return {
       message: "Team registered successfully!",
       status: "success",

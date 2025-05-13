@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Player } from "@/actions/tournament";
 import { useTheme } from "@mui/material/styles";
+import { useTranslation } from "react-i18next";
 
 const POSITIONS = ["Guard", "Forward", "Center"]; // Add the appropriate positions
 
@@ -18,12 +19,22 @@ interface TournamentPlayersSectionProps {
   ) => void;
   handleRemovePlayer: (index: number) => void;
   handleAddPlayer: () => void;
+  getPlayerFieldError?: (
+    index: number,
+    field: keyof Player,
+  ) => string | undefined;
 }
 
 const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
-  const { players, handlePlayerChange, handleRemovePlayer, handleAddPlayer } =
-    props;
+  const {
+    players,
+    handlePlayerChange,
+    handleRemovePlayer,
+    handleAddPlayer,
+    getPlayerFieldError,
+  } = props;
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -48,13 +59,15 @@ const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
           <div className="grid grid-cols-2 gap-6">
             <TextField
               name={`player${index}Name`}
-              label="Name"
+              label={t("Name")}
               value={player.name}
               onChange={(e) =>
                 handlePlayerChange(index, "name", e.target.value)
               }
               required
               variant="outlined"
+              error={!!getPlayerFieldError?.(index, "name")}
+              helperText={getPlayerFieldError?.(index, "name")}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
@@ -63,7 +76,7 @@ const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
             />
             <TextField
               name={`player${index}Email`}
-              label="Email"
+              label={t("Email")}
               type="email"
               value={player.email}
               onChange={(e) =>
@@ -71,6 +84,8 @@ const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
               }
               required
               variant="outlined"
+              error={!!getPlayerFieldError?.(index, "email")}
+              helperText={getPlayerFieldError?.(index, "email")}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
@@ -79,13 +94,15 @@ const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
             />
             <TextField
               name={`player${index}Phone`}
-              label="Phone Number"
+              label={t("Phone Number")}
               value={player.phoneNumber}
               onChange={(e) =>
                 handlePlayerChange(index, "phoneNumber", e.target.value)
               }
               required
               variant="outlined"
+              error={!!getPlayerFieldError?.(index, "phoneNumber")}
+              helperText={getPlayerFieldError?.(index, "phoneNumber")}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
@@ -95,13 +112,15 @@ const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
             <TextField
               name={`player${index}Position`}
               select
-              label="Position"
+              label={t("Position")}
               value={player.position}
               onChange={(e) =>
                 handlePlayerChange(index, "position", e.target.value)
               }
               required
               variant="outlined"
+              error={!!getPlayerFieldError?.(index, "position")}
+              helperText={getPlayerFieldError?.(index, "position")}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",
@@ -149,7 +168,7 @@ const TournamentPlayersSection = (props: TournamentPlayersSectionProps) => {
             },
           }}
         >
-          Add Player
+          {t("Add Player")}
         </Button>
       )}
     </>
