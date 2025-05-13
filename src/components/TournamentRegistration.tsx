@@ -4,6 +4,7 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   IconButton,
   MenuItem,
   Paper,
@@ -32,7 +33,6 @@ const initialState: RegistrationState = {
 
 const TournamentRegistration = () => {
   const theme = useTheme();
-  const { toggleColorMode } = useColorMode();
   const [players, setPlayers] = useState<Player[]>([
     { name: "", email: "", phoneNumber: "", position: "" },
     { name: "", email: "", phoneNumber: "", position: "" },
@@ -80,15 +80,25 @@ const TournamentRegistration = () => {
 
   return (
     <Paper
-      elevation={3}
-      className="p-8"
+      elevation={6}
+      className="p-8 backdrop-blur-sm"
       sx={{
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? "rgba(18, 18, 18, 0.8)"
+            : "rgba(255, 255, 255, 0.9)",
         color: theme.palette.text.primary,
+        borderRadius: "16px",
+        border: `1px solid ${
+          theme.palette.mode === "dark"
+            ? "rgba(255,255,255,0.1)"
+            : "rgba(0,0,0,0.1)"
+        }`,
+        backdropFilter: "blur(10px)",
       }}
     >
       <form action={formAction}>
-        <Box className="space-y-6">
+        <Box className="space-y-8">
           <TextField
             fullWidth
             name="teamName"
@@ -96,14 +106,39 @@ const TournamentRegistration = () => {
             value={teamName}
             onChange={(e) => setTeamName(e.target.value)}
             required
+            variant="outlined"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                "&:hover fieldset": {
+                  borderColor: theme.palette.primary.main,
+                },
+              },
+            }}
           />
 
           {players.map((player, index) => (
             <Box
               key={index}
-              className="space-y-4 p-4 border rounded-lg relative"
+              className="space-y-4 p-6 relative"
+              sx={{
+                borderRadius: "12px",
+                background:
+                  theme.palette.mode === "dark"
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(0,0,0,0.02)",
+                backdropFilter: "blur(5px)",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow:
+                    theme.palette.mode === "dark"
+                      ? "0 8px 16px rgba(0,0,0,0.4)"
+                      : "0 8px 16px rgba(0,0,0,0.1)",
+                },
+              }}
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-6">
                 <TextField
                   name={`player${index}Name`}
                   label="Name"
@@ -112,6 +147,12 @@ const TournamentRegistration = () => {
                     handlePlayerChange(index, "name", e.target.value)
                   }
                   required
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                    },
+                  }}
                 />
                 <TextField
                   name={`player${index}Email`}
@@ -122,6 +163,12 @@ const TournamentRegistration = () => {
                     handlePlayerChange(index, "email", e.target.value)
                   }
                   required
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                    },
+                  }}
                 />
                 <TextField
                   name={`player${index}Phone`}
@@ -131,6 +178,12 @@ const TournamentRegistration = () => {
                     handlePlayerChange(index, "phoneNumber", e.target.value)
                   }
                   required
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                    },
+                  }}
                 />
                 <TextField
                   name={`player${index}Position`}
@@ -141,6 +194,12 @@ const TournamentRegistration = () => {
                     handlePlayerChange(index, "position", e.target.value)
                   }
                   required
+                  variant="outlined"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "12px",
+                    },
+                  }}
                 >
                   {POSITIONS.map((pos) => (
                     <MenuItem key={pos} value={pos}>
@@ -151,9 +210,16 @@ const TournamentRegistration = () => {
               </div>
               {players.length > 3 && (
                 <IconButton
-                  className="absolute top-2 right-2"
+                  className="absolute -top-2 -right-2"
                   onClick={() => handleRemovePlayer(index)}
                   color="error"
+                  sx={{
+                    background: theme.palette.error.main,
+                    color: "#fff",
+                    "&:hover": {
+                      background: theme.palette.error.dark,
+                    },
+                  }}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -167,13 +233,27 @@ const TournamentRegistration = () => {
               onClick={handleAddPlayer}
               variant="outlined"
               fullWidth
+              sx={{
+                borderRadius: "12px",
+                height: "48px",
+                borderWidth: "2px",
+                "&:hover": {
+                  borderWidth: "2px",
+                },
+              }}
             >
               Add Player
             </Button>
           )}
 
           {state.status !== "idle" && (
-            <Alert severity={state.status} className="my-4">
+            <Alert
+              severity={state.status}
+              className="my-4"
+              sx={{
+                borderRadius: "12px",
+              }}
+            >
               {state.message}
             </Alert>
           )}
@@ -184,8 +264,19 @@ const TournamentRegistration = () => {
             color="primary"
             fullWidth
             disabled={isPending}
+            sx={{
+              borderRadius: "12px",
+              height: "48px",
+              background: theme.palette.primary.main,
+              "&:hover": {
+                background: theme.palette.primary.dark,
+                transform: "translateY(-2px)",
+                boxShadow: "0 8px 16px rgba(0,0,0,0.2)",
+              },
+              transition: "all 0.3s ease",
+            }}
           >
-            {isPending ? "Registering..." : "Register Team"}
+            {isPending ? <CircularProgress /> : "Register Team"}
           </Button>
         </Box>
       </form>
