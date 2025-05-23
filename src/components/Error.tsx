@@ -12,7 +12,7 @@ const Error = (props: ErrorProps) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    console.log("Error in segment:", routeSegment, error);
+    console.error("Error in segment:", routeSegment, error);
   }, [error, routeSegment]);
 
   return (
