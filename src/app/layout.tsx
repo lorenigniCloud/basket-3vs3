@@ -1,4 +1,5 @@
 import "../style/globals.css";
+import "../i18n/config";
 
 import { Geist, Geist_Mono } from "next/font/google";
 

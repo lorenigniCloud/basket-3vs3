@@ -18,8 +18,14 @@
         "name": "next"
       }
     ],
+    // To configure absolute imports
+    // Each of the "paths" are relative to the baseUrl location.
+    "baseUrl": "src/",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/styles/*": ["styles/*"],
+      "@/components/*": ["components/*"],
+      "@/assets/*": ["assets/*"],
+      "@/actions/*": ["actions/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
